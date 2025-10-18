@@ -4,6 +4,10 @@ variable "vpc_config" {
     cidr_block = string
     name = string
   })
+  default = {
+    cidr_block = "10.0.0.0/16"
+    name = "my-vpc"
+  }
 
   validation {
     condition = can(cidrnetmask(var.vpc_config.cidr_block))
@@ -19,6 +23,19 @@ variable "subnet_config" {
 
       public = optional(bool,false)
     }))
+    
+    default = {
+    subnet1 = {
+      cidr_block = "10.0.1.0/24"
+      az         = "ap-south-1a"
+      public     = true
+    }
+    subnet2 = {
+      cidr_block = "10.0.2.0/24"
+      az         = "ap-south-1b"
+      public     = false
+    }
+  }
 
     validation {
     condition = alltrue([for config in var.subnet_config: can(cidrnetmask(config.cidr_block))])
